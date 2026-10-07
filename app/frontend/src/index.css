@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: theme('colors.slate.200');
+  }
+  .dark * {
+    border-color: theme('colors.slate.800');
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv11', 'ss01';
+    font-variation-settings: normal;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(203 213 225 / 0.6);
+    border-radius: 4px;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    background-color: rgb(51 65 85 / 0.6);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(148 163 184 / 0.8);
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(71 85 105 / 0.8);
+  }
+}
+
+@layer components {
+  .thinking-dot {
+    @apply h-1.5 w-1.5 rounded-full bg-accent-500;
+    animation: dot-pulse 1.2s infinite ease-in-out;
+  }
+}
