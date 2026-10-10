@@ -1,203 +1,117 @@
----
-title: MZI RAG System
-sdk: docker
-app_port: 7860
----
+MZI Enterprise Intelligence RAG System
 
-# MZI RAG System
+A RAG (retrieval-augmented generation) application for An Enterprise Agency or Industry so your employee or manager or CEO can ask questions about your own PDF documents. You upload a PDF, ask a question in the chat, and get an answer based only on the document, with the source file and page number.
 
-**Enterprise Knowledge Intelligence RAG System**
+Demo video: https://youtu.be/iYCuOvJHc8w
 
-MZI RAG System is an enterprise-focused RAG application that lets users upload internal PDF documents and ask questions through a conversational interface.
+Features
+Upload and process PDF documents
+Semantic search over a persistent Chroma vector database
+Answers grounded in the retrieved text, with source and page references
+Says so when the documents don't contain the answer
+Chat sessions with conversation history
+Duplicate chunk detection when the same document is uploaded again
+FastAPI REST API with automatic Swagger docs
+React + TypeScript frontend with light and dark mode
+How it works
+text
+PDF -> loader -> text splitter -> embeddings -> Chroma
+                                                  |
+Question -> embedding -> similarity search -------+
+                              |
+                    relevant chunks + question
+                              |
+                             LLM
+                              |
+                  answer + source and page
+Tech stack
+Backend: Python, FastAPI, LangChain, Chroma, Pydantic
+Frontend: React, TypeScript, Vite, Tailwind CSS
+Models (via OpenRouter): openai/gpt-oss-20b for answers, openai/text-embedding-3-small for embeddings
+About this project
 
-The system retrieves relevant information from the organization's knowledge base and uses it to generate grounded responses with document and page references.
+I built the backend and the RAG pipeline myself: document ingestion, chunking, the vector store, retrieval, the chat logic and the API. The frontend was generated with an AI tool (xxx tool) and then connected to my API.
 
-## Features
+Project structure
+text
+app/
+  api/
+    main.py
+    routers/
+      chat_router.py
+      document_router.py
+  ingestion/
+    loader.py
+    splitter.py
+  retrieval/
+    rag_chain.py
+    retrievar.py
+  vectore_store/
+    database.py
+  frontend/
+    src/
+    package.json
+    vite.config.ts
+.env.example
+requirements.txt
 
-* Upload and process PDF documents
-* Persistent Chroma vector database
-* Semantic document retrieval
-* Context-grounded AI responses
-* Source and page references
-* Clear response when information is not available
-* Conversational chat sessions
-* Duplicate chunk detection
-* FastAPI REST API
-* React + TypeScript frontend
-* Responsive UI with light/dark mode
-* Environment-based configuration
+The document/ and vector_db/ folders are not part of the repository. They are created on your machine when you upload PDFs.
 
-## Architecture
+Run locally
 
-```text
-React Frontend
-      ↓
-FastAPI API
-      ↓
-LangChain RAG Pipeline
-      ↓
-Chroma Vector Database
-      ↓
-OpenRouter
-```
+You need Python, Node.js and an OpenRouter API key.
 
-### RAG Pipeline
+1. Clone the repository
 
-```text
-PDF
- ↓
-Document Loader
- ↓
-Text Splitter
- ↓
-Embeddings
- ↓
-Chroma
- ↓
-Similarity Search
- ↓
-Relevant Context
- ↓
-LLM
- ↓
-Grounded Answer + Sources
-```
+powershell
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
 
-## Tech Stack
+2. Backend
 
-**Backend**
+Copy .env.example to .env in the project root and add your key:
 
-* Python
-* FastAPI
-* LangChain
-* Chroma
-* Pydantic
-
-**Frontend**
-
-* React
-* TypeScript
-* Vite
-* Tailwind CSS
-
-**AI**
-
-* OpenRouter
-* `openai/gpt-oss-20b`
-* `openai/text-embedding-3-small`
-
-## Project Structure
-
-```text
-mzi-rag-system/
-│
-├── app/
-│   ├── api/
-│   │   ├── main.py
-│   │   └── routers/
-│   │       ├── chat_router.py
-│   │       └── document_router.py
-│   │
-│   ├── ingestion/
-│   │   ├── loader.py
-│   │   └── splitter.py
-│   │
-│   ├── retrieval/
-│   │   ├── rag_chain.py
-│   │   └── retrievar.py
-│   │
-│   ├── vectore_store/
-│   │   └── database.py
-│   │
-│   └── frontend/
-│       ├── src/
-│       ├── package.json
-│       └── vite.config.ts
-│
-├── document/
-├── vector_db/
-├── .env.example
-├── .gitignore
-├── requirements.txt
-└── README.md
-```
-
-## API
-
-| Method | Endpoint           | Purpose                  |
-| ------ | ------------------ | ------------------------ |
-| GET    | `/health`          | Check API status         |
-| POST   | `/chat`            | Ask a question           |
-| GET    | `/document`        | List uploaded documents  |
-| POST   | `/document/upload` | Upload and process a PDF |
-
-Interactive API documentation is available through FastAPI Swagger at `/docs`.
-
-## Environment Variables
-
-### Backend
-
-Create a `.env` file in the project root:
-
-```env
+env
 OPENROUTER_API_KEY=your_openrouter_api_key
-```
 
-### Frontend
+Then:
 
-Create `.env` inside `app/frontend/`:
-
-```env
-VITE_API_BASE_URL=http://127.0.0.1:8000
-```
-
-Never commit real API keys or other secrets.
-
-## Run Locally
-
-### Backend
-
-```powershell
+powershell
+python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 uvicorn app.api.main:app --reload
-```
 
-### Frontend
+The API runs at http://127.0.0.1:8000, and the interactive docs are at /docs.
 
-```powershell
+3. Frontend
+
+In a second terminal, create app/frontend/.env:
+
+env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+
+Then:
+
+powershell
 cd app/frontend
 npm install
 npm run dev
-```
 
-The frontend normally runs on:
+Open http://localhost:5173, upload a PDF and start asking questions.
 
-```text
-http://localhost:5173
-```
+API
+Method	Endpoint	Description
+GET	/health	API status
+POST	/chat	Ask a question
+GET	/document	List uploaded documents
+POST	/document/upload	Upload and index a PDF
+Limitations
+PDF files only
+No user login
+No endpoint for deleting documents yet
+Vector data is stored on local disk
+Not deployed online; run it locally using the steps above
+Author
 
-The FastAPI API normally runs on:
-
-```text
-http://127.0.0.1:8000
-```
-
-## Deployment
-
-The application is designed to run as separate frontend and backend services.
-
-Before deployment:
-
-* Configure production environment variables
-* Set the production frontend URL in FastAPI CORS
-* Configure the frontend API URL
-* Provide persistent storage for uploaded documents and the vector database
-* Run the backend without development reload mode
-
-## Author
-
-**Moiz Imam**
-AI Engineer
-
-Built as a practical enterprise RAG application using modern AI engineering tools and deployment practices.
+Moiz Imam
