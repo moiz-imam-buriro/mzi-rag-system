@@ -16,9 +16,6 @@ vector_db/
 vector_database/
 chroma_db/
 
-# Local uploaded documents
-document/
-
 # IDE
 .vscode/
 .idea/

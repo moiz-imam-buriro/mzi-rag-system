@@ -1,3 +1,9 @@
+---
+title: MZI RAG System
+sdk: docker
+app_port: 7860
+---
+
 # MZI RAG System
 
 **Enterprise Knowledge Intelligence RAG System**

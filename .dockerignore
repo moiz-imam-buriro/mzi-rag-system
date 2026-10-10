@@ -1,0 +1,7 @@
+.venv
+.env
+.git
+app/frontend/node_modules
+app/frontend
+__pycache__
+vector_db
