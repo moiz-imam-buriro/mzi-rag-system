@@ -64,7 +64,7 @@ You need Python, Node.js and an OpenRouter API key.
 1. Clone the repository
 
 powershell
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/moiz-imam-buriro/YOUR_REPO.git
 cd YOUR_REPO
 
 2. Backend
